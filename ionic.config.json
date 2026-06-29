@@ -1,0 +1,7 @@
+{
+  "name": "ph-taller2",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}
