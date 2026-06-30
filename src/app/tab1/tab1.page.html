@@ -1,8 +1,16 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      Cita aleatoria
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
 <ion-content class="ion-padding">
 
   <app-cita-card
-    [cita]="cita"
-    [permitirEliminar]="false">
+    *ngIf="cita"
+    [cita]="cita">
   </app-cita-card>
 
 </ion-content>

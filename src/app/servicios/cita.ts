@@ -42,4 +42,8 @@ export class CitaService {
   eliminarCita(id: number): void {
     this.citas = this.citas.filter(c => c.id !== id);
   }
+
+  limpiarCitas(): void {
+    this.citas = [];
+  }
 }

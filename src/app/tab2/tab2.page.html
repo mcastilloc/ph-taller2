@@ -8,6 +8,60 @@
 
 <ion-content class="ion-padding">
 
+  <form [formGroup]="formulario">
+
+    <ion-item>
+      <ion-input
+        label="Frase"
+        labelPlacement="stacked"
+        formControlName="frase">
+      </ion-input>
+    </ion-item>
+
+    <div *ngIf="formulario.get('frase')?.touched">
+
+      <p *ngIf="formulario.get('frase')?.errors?.['required']">
+        La frase es obligatoria.
+      </p>
+
+      <p *ngIf="formulario.get('frase')?.errors?.['minlength']">
+        La frase debe tener al menos 5 caracteres.
+      </p>
+
+    </div>
+
+    <ion-item>
+      <ion-input
+        label="Autor"
+        labelPlacement="stacked"
+        formControlName="autor">
+      </ion-input>
+    </ion-item>
+
+    <div *ngIf="formulario.get('autor')?.touched">
+
+      <p *ngIf="formulario.get('autor')?.errors?.['required']">
+        El autor es obligatorio.
+      </p>
+
+      <p *ngIf="formulario.get('autor')?.errors?.['minlength']">
+        El autor debe tener al menos 2 caracteres.
+      </p>
+
+    </div>
+
+    <ion-button
+      expand="block"
+      (click)="guardar()">
+
+      Guardar cita
+
+    </ion-button>
+
+  </form>
+
+  <hr>
+
   <app-cita-card
     *ngFor="let cita of citas"
     [cita]="cita"
