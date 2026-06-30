@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { SqliteService } from '../servicios/sqlite';
 
 import {
   IonHeader,
@@ -19,10 +20,7 @@ import {
   Validators
 } from '@angular/forms';
 
-
-
 import { Cita } from '../modelos/citas';
-import { CitaService } from '../servicios/cita';
 import { CitaCardComponent } from '../componentes/cita-card/cita-card.component';
 
 @Component({
@@ -44,58 +42,51 @@ import { CitaCardComponent } from '../componentes/cita-card/cita-card.component'
     ReactiveFormsModule
   ]
 })
+
 export class Tab2Page implements OnInit {
 
   citas: Cita[] = [];
-
-constructor(
-  private citaService: CitaService,
-  private fb: FormBuilder
-) {}
-
-  ngOnInit(): void {
-    this.formulario = this.fb.group({
-  frase: [
-    '',
-    [
-      Validators.required,
-      Validators.minLength(5)
-    ]
-  ],
-  autor: [
-    '',
-    [
-      Validators.required,
-      Validators.minLength(2)
-    ]
-  ]
-});
-
-this.citas = this.citaService.obtenerCitas();
-  }
-
-  eliminar(id: number): void {
-    this.citaService.eliminarCita(id);
-    this.citas = this.citaService.obtenerCitas();
-  }
-
-  guardar(): void {
-
-  if (this.formulario.invalid) {
-    this.formulario.markAllAsTouched();
-    return;
-  }
-
-  this.citaService.agregarCita({
-    id: Date.now(),
-    frase: this.formulario.value.frase,
-    autor: this.formulario.value.autor
-  });
-
-  this.citas = this.citaService.obtenerCitas();
-
-  this.formulario.reset();
-}
-  
   formulario!: FormGroup;
+  private ready: boolean = false; 
+
+  constructor(
+    private sqlite: SqliteService,
+    private fb: FormBuilder
+  ) {}
+
+  async ngOnInit() {
+
+    await this.sqlite.init();
+    this.ready = true;
+
+    this.formulario = this.fb.group({
+      frase: ['', [Validators.required, Validators.minLength(5)]],
+      autor: ['', [Validators.required, Validators.minLength(2)]]
+    });
+
+    this.citas = await this.sqlite.getCitas();
+  }
+
+  async eliminar(id: number) {
+    await this.sqlite.deleteCita(id);
+    this.citas = await this.sqlite.getCitas();
+  }
+
+  async guardar() {
+
+    if (!this.ready) {
+      console.log('DB no lista aún');
+      return;
+    }
+
+    if (this.formulario.invalid) return;
+
+    await this.sqlite.addCita(this.formulario.value);
+
+    this.citas = await this.sqlite.getCitas();
+    this.formulario.reset();
+    console.log('FORM VALUE', this.formulario.value);
+    await this.sqlite.addCita(this.formulario.value);
+    console.log('INSERT DONE');
+  }
 }

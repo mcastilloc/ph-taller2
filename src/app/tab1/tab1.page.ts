@@ -16,6 +16,7 @@ import { Cita } from '../modelos/citas';
 import { CitaService } from '../servicios/cita';
 import { CitaCardComponent } from '../componentes/cita-card/cita-card.component';
 import { ConfiguracionService } from '../servicios/configuracion';
+import { SqliteService } from '../servicios/sqlite';
 
 @Component({
   selector: 'app-tab1',
@@ -37,26 +38,13 @@ import { ConfiguracionService } from '../servicios/configuracion';
 })
 export class Tab1Page implements OnInit {
 
-  #citas: Cita[] = [];
-  cita!: Cita;
+  cita!: Cita | null;
 
-  constructor(
-      private citaService: CitaService,
-      private configService: ConfiguracionService
-  ) {}
+  constructor(private sqlite: SqliteService) {}
 
-async ngOnInit(): Promise<void> {
-
-  const config = await this.configService.obtenerConfig();
-
-  // obtener cita aleatoria
-  this.cita = this.citaService.obtenerCitaAleatoria();
-
-  // si está activado borrar inicio
-  if (config.borrarInicio) {
-    this.citaService.limpiarCitas();
-    this.cita = undefined as any;
+  async ngOnInit() {
+    await this.sqlite.init();
+    this.cita = await this.sqlite.getRandomCita();
   }
-}
 
 }
