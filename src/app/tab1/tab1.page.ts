@@ -14,6 +14,7 @@ import { CommonModule } from '@angular/common';
 
 import { Cita } from '../modelos/citas';
 import { CitaService } from '../servicios/cita';
+import { CitaCardComponent } from '../componentes/cita-card/cita-card.component';
 
 @Component({
   selector: 'app-tab1',
@@ -29,7 +30,8 @@ import { CitaService } from '../servicios/cita';
     IonCard,
     IonCardHeader,
     IonCardTitle,
-    IonCardContent
+    IonCardContent,
+    CitaCardComponent
   ],
 })
 export class Tab1Page implements OnInit {

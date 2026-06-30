@@ -1,3 +1,27 @@
-<p>
-  cita-card works!
-</p>
+<ion-card *ngIf="cita">
+
+  <ion-card-header>
+    <ion-card-title>
+      "{{ cita.frase }}"
+    </ion-card-title>
+  </ion-card-header>
+
+  <ion-card-content>
+
+    <p>
+      — {{ cita.autor }}
+    </p>
+
+    <ion-button
+      *ngIf="permitirEliminar"
+      expand="block"
+      color="danger"
+      (click)="eliminarCita()">
+
+      Eliminar
+
+    </ion-button>
+
+  </ion-card-content>
+
+</ion-card>
